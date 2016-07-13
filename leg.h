@@ -43,12 +43,17 @@ public:
      */
     void moveTo(const Vector4 & point);
 
+    /// Управление сервами напрямую
+    void setServoAngles(double base, double femur, double tibia);
+
 private:
     Side FSide;
     Multiservo FServoBase;
     Multiservo FServoFemur;
     Multiservo FServoTibia;
     Vector4 FPos;
+
+    bool right() const;
 public:
 
 };

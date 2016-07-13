@@ -78,9 +78,13 @@ void Leg::moveTo(const Vector4 & point)
     double x = point.x();
     double y = point.y();
     double z = point.z();
+
+    if (right()) x *= -1;
     
+    // Поворот плоскости ноги до целевой точки
     double base_angle = atan2(y, x) * 180.0 / PI;
-    FServoBase.write(90 + base_angle);
+
+    if (right()) base_angle *= -1;
         
     // Координаты коленки в плоскости бедра и голени (относительно бедренного сустава)
     double knee_x;
@@ -92,11 +96,28 @@ void Leg::moveTo(const Vector4 & point)
     {
         double femur_angle = atan2(knee_y, knee_x) * 180.0 / PI;
         double tibia_angle = femur_angle + atan2(-(y2 - knee_y), x2 - knee_x) * 180 / PI;
-        FServoFemur.write(90 + femur_angle);
-        FServoTibia.write(tibia_angle);
+
+        if (right())
+        {
+            femur_angle *= -1;
+            tibia_angle = 180 - tibia_angle;
+        }
+        
+        setServoAngles(90 + base_angle, 90 + femur_angle, tibia_angle);
     }
 }
 
+void Leg::setServoAngles(double base, double femur, double tibia)
+{
+    FServoBase.write(base);
+    FServoFemur.write(femur);
+    FServoTibia.write(tibia);
+}
+
+bool Leg::right() const
+{
+    return (FSide == Right);
+}
 
 
 
