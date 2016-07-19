@@ -7,9 +7,13 @@ Leg::Leg(Leg::Side side,
         int pin_tibia,
         double x_pos,
         double y_pos,
-        double z_pos):
+        double z_pos,
+        double delta_base, 
+        double delta_femur, 
+        double delta_tibia):
     FSide(side),
-    FPos(x_pos, y_pos, z_pos)
+    FPos(x_pos, y_pos, z_pos),
+    FDeltaBase(delta_base), FDeltaFemur(delta_femur), FDeltaTibia(delta_tibia)
 {
     FServoBase.attach(pin_base);
     FServoFemur.attach(pin_femur);
@@ -109,9 +113,9 @@ void Leg::moveTo(const Vector4 & point)
 
 void Leg::setServoAngles(double base, double femur, double tibia)
 {
-    FServoBase.write(base);
-    FServoFemur.write(femur);
-    FServoTibia.write(tibia);
+    FServoBase.write(base + FDeltaBase);
+    FServoFemur.write(femur + FDeltaFemur);
+    FServoTibia.write(tibia + FDeltaTibia);
 }
 
 bool Leg::right() const

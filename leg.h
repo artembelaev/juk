@@ -34,7 +34,10 @@ public:
         int pin_tibia,          // Привод поворота голени (коленка жука)
         double x_pos = 0,        // Смещение основания ноги влево от центра жука (мм)
         double y_pos = 0,        // Смещение основания ноги вперед от центра жука (мм)
-        double z_pos = 0         // Смещение основания ноги по вертикали от центра жука (мм)
+        double z_pos = 0,        // Смещение основания ноги по вертикали от центра жука (мм)
+        double delta_base = 0, 
+        double delta_femur = 0, 
+        double delta_tibia = 0
       );
 
     /// Перемещение кончика ноги к точке (мм)
@@ -53,8 +56,12 @@ private:
     Multiservo FServoTibia;
     Vector4 FPos;
 
-    bool right() const;
-public:
+    double FDeltaBase;
+    double FDeltaFemur;
+    double FDeltaTibia;
 
+    bool right() const;
 };
+
+
 
