@@ -1,3 +1,6 @@
+#ifndef __LEG_H
+#define __LEG_H
+
 #include <Multiservo.h>
 #include "vector4.h"
 #include "matrix4.h"
@@ -28,13 +31,12 @@ public:
     };
 
     /// Конструктор, принимающий пины приводов, координаты точки крепления ноги
-    Leg(Side side,              // Сторона жука, на которой расположена нога
-        int pin_base,           // Привод поворота ноги 
-        int pin_femur,          // Привод поворота бедра по вертикали
-        int pin_tibia,          // Привод поворота голени (коленка жука)
-        double x_pos = 0,        // Смещение основания ноги влево от центра жука (мм)
-        double y_pos = 0,        // Смещение основания ноги вперед от центра жука (мм)
-        double z_pos = 0,        // Смещение основания ноги по вертикали от центра жука (мм)
+    Leg(Side side,                              // Сторона жука, на которой расположена нога
+        int pin_base,                           // Привод поворота ноги 
+        int pin_femur,                          // Привод поворота бедра по вертикали
+        int pin_tibia,                          // Привод поворота голени (коленка жука)
+        const Vector4 & tip_point,              // Начальные координаты кончика ноги (мм)
+        const Vector4 & base_point = Vector4(), // Координаты точки крепления ноги (мм)
         double delta_base = 0, 
         double delta_femur = 0, 
         double delta_tibia = 0
@@ -46,6 +48,9 @@ public:
      */
     void moveTo(const Vector4 & point);
 
+    /// Начальные координаты кончика ноги (мм)
+    Vector4 tipPoint() const;
+    
     /// Управление сервами напрямую
     void setServoAngles(double base, double femur, double tibia);
 
@@ -54,8 +59,10 @@ private:
     Multiservo FServoBase;
     Multiservo FServoFemur;
     Multiservo FServoTibia;
-    Vector4 FPos;
 
+    Vector4 FTipPoint;
+    Vector4 FBasePoint;
+    
     double FDeltaBase;
     double FDeltaFemur;
     double FDeltaTibia;
@@ -63,5 +70,6 @@ private:
     bool right() const;
 };
 
+#endif // __LEG_H
 
 

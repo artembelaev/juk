@@ -5,14 +5,14 @@ Leg::Leg(Leg::Side side,
         int pin_base,
         int pin_femur,
         int pin_tibia,
-        double x_pos,
-        double y_pos,
-        double z_pos,
+        const Vector4 & tip_point,              // Начальные координаты кончика ноги (мм)
+        const Vector4 & base_point,
         double delta_base, 
         double delta_femur, 
         double delta_tibia):
     FSide(side),
-    FPos(x_pos, y_pos, z_pos),
+    FTipPoint(tip_point),
+    FBasePoint(base_point),
     FDeltaBase(delta_base), FDeltaFemur(delta_femur), FDeltaTibia(delta_tibia)
 {
     FServoBase.attach(pin_base);
@@ -109,6 +109,11 @@ void Leg::moveTo(const Vector4 & point)
         
         setServoAngles(90 + base_angle, 90 + femur_angle, tibia_angle);
     }
+}
+
+Vector4 Leg::tipPoint() const
+{
+    return FTipPoint;
 }
 
 void Leg::setServoAngles(double base, double femur, double tibia)
