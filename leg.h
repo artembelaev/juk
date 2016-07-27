@@ -1,3 +1,5 @@
+#include <Multiservo.h>
+
 #ifndef __LEG_H
 #define __LEG_H
 

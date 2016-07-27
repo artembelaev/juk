@@ -125,7 +125,7 @@ void warm()
   }
 }
 
-void stepAllLegs(double azimuth)
+void stepAllLegs(double azimuth, double t_start)
 {
     for (int i = 0; i < LEG_COUNT; ++i)
     {

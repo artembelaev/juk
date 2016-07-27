@@ -5,8 +5,8 @@
 IRrecv irrecv(11); // указываем вывод, к которому подключен приемник
 decode_results ir_result;
 
-double AZIMUTH = 0;
-IrXindaRemoteCode LAST_IR_CODE = ircUp;
+double azimuth = 0;
+IrXindaRemoteCode last_it_code = ircUp;
 
 void setup() 
 {
@@ -40,22 +40,42 @@ void getAzimuth(double & a, IrXindaRemoteCode code, IrXindaRemoteCode & last_cod
     
 }
 
+double mapDouble(double t, double t_min, double t_max, double out_min, double out_max)
+{
+    return ((t - t_min) / (t_max - t_min)) * (out_max - out_min) + out_min;
+}
+
+void smoothAzimuth(double dt, double a_start, double a_end, double t_start)
+{
+    double t_min = millis();
+    double t = t_min;
+    double t_max = t_min + dt;
+    while (t < t_max)
+    {
+        double azimuth = mapDouble(t, t_min, t_max, a_start, a_end);
+        stepAllLegs(azimuth, t_start);
+        t = millis();
+    }
+}
+
 void loop() 
 {
     //// Хождение по кругу
     // stepAllLegs(double(millis())/8000.0 * 360);
 
     
-    
     if (irrecv.decode(&ir_result))
     {
-        getAzimuth(AZIMUTH, getXindaCode(ir_result.value), LAST_IR_CODE);
-        Serial.println(ir_result.value, HEX); // печатаем данные
-        Serial.print("no command");
-        Serial.println(AZIMUTH);
+        double new_azimuth = azimuth;
+        getAzimuth(new_azimuth, getXindaCode(ir_result.value), last_it_code);
+        if (fabs(new_azimuth - azimuth) > 1.0)
+        {
+            smoothAzimuth(700, azimuth, new_azimuth, t_start);
+        }
         irrecv.resume(); // принимаем следующую команду        
+        azimuth = new_azimuth;
     }
    // else Serial.println("no command");
-    stepAllLegs(AZIMUTH);  
+    stepAllLegs(azimuth, t_start);  
   
 }
