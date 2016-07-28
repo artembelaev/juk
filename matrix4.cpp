@@ -1,15 +1,5 @@
 #include "matrix4.h"
 
-static double mycos(double deg)
-{
-    return cos(PI * deg / 180.0);
-}
-
-static double mysin(double deg)
-{
-    return sin(PI * deg / 180.0);
-}
-
 Matrix4x4::Matrix4x4()
 { /// Инициализируем все переменные
     clear();

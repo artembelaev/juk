@@ -45,15 +45,23 @@ double mapDouble(double t, double t_min, double t_max, double out_min, double ou
     return ((t - t_min) / (t_max - t_min)) * (out_max - out_min) + out_min;
 }
 
+/// Плавное изменение направления шага ноги в сторону наименьшего поворота
 void smoothAzimuth(double dt, double a_start, double a_end, double t_start)
 {
+    a_start = normalizeAngle(a_start);
+    a_end = normalizeAngle(a_end);
+    if (a_end < a_start - 180)
+        a_end += 360;
+    else if (a_end > a_start + 180)
+        a_end -= 360;
+    
     double t_min = millis();
     double t = t_min;
     double t_max = t_min + dt;
     while (t < t_max)
     {
         double azimuth = mapDouble(t, t_min, t_max, a_start, a_end);
-        stepAllLegs(azimuth, t_start);
+        stepAllLegs(normalizeAngle(azimuth), t_start);
         t = millis();
     }
 }
@@ -75,7 +83,6 @@ void loop()
         irrecv.resume(); // принимаем следующую команду        
         azimuth = new_azimuth;
     }
-   // else Serial.println("no command");
     stepAllLegs(azimuth, t_start);  
   
 }

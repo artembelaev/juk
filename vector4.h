@@ -137,7 +137,6 @@ public:
 
 Vector4 operator *(double f, const Vector4 & v);
 
-Vector4 mapVector(double t, double t_min, double t_max, const Vector4 & out_min, const Vector4 & out_max);
 
 
 #endif
