@@ -37,8 +37,7 @@ public:
         int pin_base,                           // Привод поворота ноги 
         int pin_femur,                          // Привод поворота бедра по вертикали
         int pin_tibia,                          // Привод поворота голени (коленка жука)
-        const Vector4 & tip_point,              // Начальные координаты кончика ноги (мм)
-        const Vector4 & base_point = Vector4(), // Координаты точки крепления ноги (мм)
+        const Vector4 & base_point,             // Координаты точки крепления ноги (мм)
         double delta_base = 0, 
         double delta_femur = 0, 
         double delta_tibia = 0
@@ -50,8 +49,12 @@ public:
      */
     void moveTo(const Vector4 & point);
 
+    /// Координаты точки крепления ноги (мм)
+    Vector4 basePoint() const;
+    
     /// Начальные координаты кончика ноги (мм)
     Vector4 tipPoint() const;
+    void setTipPoint(const Vector4 & value);
     
     /// Управление сервами напрямую
     void setServoAngles(double base, double femur, double tibia);

@@ -5,13 +5,11 @@ Leg::Leg(Leg::Side side,
         int pin_base,
         int pin_femur,
         int pin_tibia,
-        const Vector4 & tip_point,              // Начальные координаты кончика ноги (мм)
         const Vector4 & base_point,
         double delta_base, 
         double delta_femur, 
         double delta_tibia):
     FSide(side),
-    FTipPoint(tip_point),
     FBasePoint(base_point),
     FDeltaBase(delta_base), FDeltaFemur(delta_femur), FDeltaTibia(delta_tibia)
 {
@@ -79,9 +77,9 @@ static bool intersectCircles(
 
 void Leg::moveTo(const Vector4 & point)
 {
-    double x = point.x();
-    double y = point.y();
-    double z = point.z();
+    double x = point.x() - FBasePoint.x();
+    double y = point.y() - FBasePoint.y();
+    double z = point.z() - FBasePoint.z();
 
     if (right()) x *= -1;
     
@@ -111,9 +109,19 @@ void Leg::moveTo(const Vector4 & point)
     }
 }
 
+Vector4 Leg::basePoint() const
+{
+    return FBasePoint;
+}
+
 Vector4 Leg::tipPoint() const
 {
     return FTipPoint;
+}
+
+void Leg::setTipPoint(const Vector4 & value)
+{
+    FTipPoint = value;
 }
 
 void Leg::setServoAngles(double base, double femur, double tibia)

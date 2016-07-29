@@ -10,19 +10,7 @@ class Vector4
 {
 public:
 
-    Vector4()
-    { 
-        X = Y = Z = 0.0;
-        W = 1.0;
-    }
-    Vector4(double x, double y, double z)
-    {
-        X = x;
-        Y = y;
-        Z = z;
-        W = 1.0;
-    }
-    Vector4(double x, double y, double z, double w)
+    Vector4(double x = 0, double y = 0, double z = 0, double w = 1)
     { 
         X = x;
         Y = y;
