@@ -6,10 +6,10 @@
 #include "adv_math.h"
 
 Leg leg_l1(Leg::Left,   0,  1,  2, Vector4( 35, 90), - 3.5, -6.0, -4);    
-Leg leg_l2(Leg::Left,   3,  4,  5, Vector4( 35,  0), - 8.0, +6.0, +5.0);    
+Leg leg_l2(Leg::Left,   3,  4,  5, Vector4( 35,  0), - 8.0, +3.0, +5.0);    
 Leg leg_l3(Leg::Left,   6,  7,  8, Vector4( 35,-90), -10.0, -6.0, -5.0);    
 Leg leg_r1(Leg::Right, 17, 16, 15, Vector4(-35, 90), + 3.0, -3.0, +2.0);
-Leg leg_r2(Leg::Right, 14, 13, 12, Vector4(-35,  0), + 3.5, +5.0, -8.0);
+Leg leg_r2(Leg::Right, 14, 13, 12, Vector4(-35,  0), + 3.5, +5.0, -2.0);
 Leg leg_r3(Leg::Right,  9, 10, 11, Vector4(-35, -90), - 7.5, -7.0, -9.0);
 
 

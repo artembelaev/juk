@@ -67,9 +67,11 @@ void setup()
     t_prev = t_start;
     irrecv.enableIRIn(); // запускаем прием
 
-    // warm();
-
-    //allLegsSet90();
+     warm();
+    allLegsSet90();
+    delay(100);
+    turn(5000, 25, 10);
+    turn(5000, -25, 10);
 }
 
 Vector4 getV(double azimuth, double v_abs)
@@ -77,31 +79,72 @@ Vector4 getV(double azimuth, double v_abs)
     return Vector4(v_abs * sinDeg(azimuth), v_abs * cosDeg(azimuth));
 }
 
+enum JukState
+{
+    jsStop,
+    jsWalk,
+    jsTurnLeft,
+    jsTurnRight
+};
+
+JukState juk_state = jsStop;
+
+JukState xindaCodeToState(
+    IrXindaRemoteCode ir_button, 
+    JukState def_state)
+{
+    switch (ir_button)
+    {
+    case ircOk: return jsStop;
+    case ircUp:
+    case ircDown:
+    case ircLeft:
+    case ircRight: return jsWalk;
+    case ircAsterisk: return jsTurnLeft;
+    case ircSharp: return jsTurnRight;
+    default: return def_state;
+    }
+}
+
 void loop() 
 {
     //// Хождение по кругу
     // stepAllLegs(double(millis())/8000.0 * 360);
-    double v_abs = 70; // мм/с
+    double v_abs = 90; // мм/с
     decode_results ir_result;
+    IrXindaRemoteCode ir_button = ircUnknown; // код кнопки
     if (irrecv.decode(&ir_result))
     {
-        
-        double new_azimuth = azimuth;
-        getAzimuth(new_azimuth, getXindaCode(ir_result.value), last_ir_code);
-        if (fabs(new_azimuth - azimuth) > 1.0)
+        ir_button = getXindaCode(ir_result.value);
+        juk_state = xindaCodeToState(ir_button, juk_state);
+        if (juk_state == jsWalk)
         {
-            smoothV(800, getV(azimuth, v_abs), getV(new_azimuth, v_abs), phase_prev, t_prev);
+            double new_azimuth = azimuth;
+            getAzimuth(new_azimuth, ir_button, last_ir_code);
+            if (fabs(new_azimuth - azimuth) > 1.0)
+            {
+                smoothV(800, getV(azimuth, v_abs), getV(new_azimuth, v_abs), phase_prev, t_prev);
+            }
+            azimuth = new_azimuth;
         }
         irrecv.resume(); // принимаем следующую команду
-        azimuth = new_azimuth;
+        
     }
-    
+
     double t = millis();
-    phase_prev = stepAllLegs(getV(azimuth, v_abs), phase_prev, t - t_prev);
+    if (juk_state == jsStop)
+    {
+        // stop
+        phase_prev = stepAllLegs(getV(azimuth, v_abs), phase_prev, 0);
+    }
+    else if (juk_state == jsWalk)
+    {
+        
+        phase_prev = stepAllLegs(getV(azimuth, v_abs), phase_prev, t - t_prev);
+        
+    }
     t_prev = t;
 
-   // turn(5000, 25, 10);
-    //turn(5000, -25, 10);
     
   
 }
